@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  meu-postgres:
+    image: postgres:latest
+    container_name: meu-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ms_clientes,ms_pedidos,ms_produtos,ms_logistica
+    command: >
+      bash -c '
+        echo "CREATE DATABASE ms_clientes;" >> /docker-entrypoint-initdb.d/init.sql &&
+        echo "CREATE DATABASE ms_pedidos;" >> /docker-entrypoint-initdb.d/init.sql &&
+        echo "CREATE DATABASE ms_produtos;" >> /docker-entrypoint-initdb.d/init.sql &&
+        echo "CREATE DATABASE ms_logistica;" >> /docker-entrypoint-initdb.d/init.sql &&
+        docker-entrypoint.sh postgres
+      ' 
+    ports:
+      - "5432:5432"
+    networks:
+      - my_network
+networks:
+  my_network:
