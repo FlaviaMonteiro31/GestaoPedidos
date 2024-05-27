@@ -1,0 +1,290 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8083",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/pedido/preparaEntrega": {
+      "post": {
+        "tags": [
+          "pedido-controller"
+        ],
+        "operationId": "preparaEntrega",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogisticaPedidoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogisticaPedidoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pedido/geraPedido": {
+      "post": {
+        "tags": [
+          "pedido-controller"
+        ],
+        "description": "Gera o pedido",
+        "operationId": "gerarPedido",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PedidoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Pedido criado",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PedidoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LogisticaPedidoRequest": {
+        "type": "object",
+        "properties": {
+          "pedido": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cepEntrega": {
+            "type": "string"
+          }
+        }
+      },
+      "LogisticaPedidoResponse": {
+        "type": "object",
+        "properties": {
+          "entregaId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "pedido": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cepEntrega": {
+            "type": "string"
+          },
+          "empresa": {
+            "type": "string"
+          },
+          "motorista": {
+            "type": "string"
+          },
+          "dataCriacao": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "prazoDeEntrega": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dataEntrega": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "statusEntrega": {
+            "type": "string"
+          }
+        }
+      },
+      "Endereco": {
+        "type": "object",
+        "properties": {
+          "enderecoId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "logradouro": {
+            "type": "string"
+          },
+          "numero": {
+            "type": "string"
+          },
+          "cep": {
+            "type": "string"
+          },
+          "complemento": {
+            "type": "string"
+          },
+          "cidade": {
+            "type": "string"
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "AC",
+              "AL",
+              "AP",
+              "AM",
+              "BA",
+              "CE",
+              "ES",
+              "GO",
+              "MA",
+              "MT",
+              "MS",
+              "MG",
+              "PA",
+              "PB",
+              "PR",
+              "PE",
+              "PI",
+              "RJ",
+              "RN",
+              "RS",
+              "RO",
+              "RR",
+              "SC",
+              "SP",
+              "SE",
+              "TO"
+            ]
+          }
+        }
+      },
+      "Item": {
+        "type": "object",
+        "properties": {
+          "iditem": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "idproduto": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantidade": {
+            "type": "number"
+          },
+          "pedido": {
+            "$ref": "#/components/schemas/Pedido"
+          }
+        }
+      },
+      "Pedido": {
+        "type": "object",
+        "properties": {
+          "idpedido": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cliente": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "itens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Item"
+            }
+          },
+          "status": {
+            "type": "string"
+          },
+          "enderecoEntrega": {
+            "$ref": "#/components/schemas/Endereco"
+          }
+        }
+      },
+      "PedidoRequest": {
+        "required": [
+          "itens"
+        ],
+        "type": "object",
+        "properties": {
+          "cliente": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "itens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Item"
+            }
+          },
+          "enderecoEntrega": {
+            "$ref": "#/components/schemas/Endereco"
+          }
+        }
+      },
+      "ItemResponse": {
+        "type": "object",
+        "properties": {
+          "iditem": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "idproduto": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantidade": {
+            "type": "number"
+          }
+        }
+      },
+      "PedidoResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cliente": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "itens": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ItemResponse"
+            }
+          },
+          "status": {
+            "type": "string"
+          },
+          "enderecoEntrega": {
+            "$ref": "#/components/schemas/Endereco"
+          }
+        }
+      }
+    }
+  }
+}

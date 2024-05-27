@@ -1,0 +1,393 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8085",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/produtoEstoque/atualizar/{id}": {
+      "put": {
+        "tags": [
+          "produto-estoque-controller"
+        ],
+        "description": "Atualiza dados do produto",
+        "operationId": "atualizaProduto",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProdutoEstoqueResquest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Retorna dados do produto",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProdutoEstoqueResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Produto não localizado.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProdutoEstoqueResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/produtoEstoque/cadastrar": {
+      "post": {
+        "tags": [
+          "produto-estoque-controller"
+        ],
+        "description": "Realiza do cadastro do produto e estoque",
+        "operationId": "inserirProdutoEstoque",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProdutoEstoqueResquest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Retorna dados do produto e estoque cadastrado",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProdutoEstoqueResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/produtoEstoque/listaTodos": {
+      "get": {
+        "tags": [
+          "produto-estoque-controller"
+        ],
+        "description": "Consulta todos os produtos",
+        "operationId": "listarTodos",
+        "parameters": [
+          {
+            "name": "pagina",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "tamanho",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna dados de todos os produtos e estoque",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageProdutoEstoqueResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/produtoEstoque/lista/{id}": {
+      "get": {
+        "tags": [
+          "produto-estoque-controller"
+        ],
+        "description": "Consulta dados de produto por Id.",
+        "operationId": "listaPorId",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna dados do produto e estoque",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProdutoEstoqueResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Produto não localizado.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProdutoEstoqueResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/produtoEstoque/{id}": {
+      "delete": {
+        "tags": [
+          "produto-estoque-controller"
+        ],
+        "description": "Deleta produto e estoque",
+        "operationId": "deletaProduto",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dados deletados.",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/controle-produtos/removerEstoque": {
+      "post": {
+        "description": "removerEstoque consumer",
+        "operationId": "removerEstoque_POST",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProdutoRequest"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "$ref": "#/components/schemas/ProdutoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "content": {}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProdutoEstoqueResquest": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          },
+          "tamanho": {
+            "type": "string"
+          },
+          "cor": {
+            "type": "string"
+          },
+          "preco": {
+            "type": "number"
+          },
+          "quantidade": {
+            "type": "number"
+          }
+        }
+      },
+      "ProdutoEstoqueResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          },
+          "tamanho": {
+            "type": "string"
+          },
+          "cor": {
+            "type": "string"
+          },
+          "preco": {
+            "type": "number"
+          },
+          "quantidade": {
+            "type": "number"
+          }
+        }
+      },
+      "PageProdutoEstoqueResponse": {
+        "type": "object",
+        "properties": {
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProdutoEstoqueResponse"
+            }
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paged": {
+            "type": "boolean"
+          },
+          "unpaged": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "empty": {
+            "type": "boolean"
+          },
+          "sorted": {
+            "type": "boolean"
+          },
+          "unsorted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProdutoRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantidade": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}
