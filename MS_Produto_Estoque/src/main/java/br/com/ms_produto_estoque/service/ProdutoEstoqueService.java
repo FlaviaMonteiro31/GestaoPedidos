@@ -78,8 +78,7 @@ public class ProdutoEstoqueService {
         final BigDecimal novaQuantidade = quantiadadeDisponivel.subtract(quantidadeSolicitada);
         if (novaQuantidade.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalStateException("Estoque insuficiente para a compra desejada.");
-        }
-        else {
+        } else {
             return novaQuantidade;
         }
     }

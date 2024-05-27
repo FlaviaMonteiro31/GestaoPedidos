@@ -1,6 +1,8 @@
 package br.com.ms_pedidos.controller;
 
 import br.com.ms_pedidos.exception.PedidoException;
+import br.com.ms_pedidos.model.records.LogisticaPedidoRequest;
+import br.com.ms_pedidos.model.records.LogisticaPedidoResponse;
 import br.com.ms_pedidos.model.records.PedidoRequest;
 import br.com.ms_pedidos.model.records.PedidoResponse;
 import br.com.ms_pedidos.service.PedidoService;
@@ -37,5 +39,10 @@ public class PedidoController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(response.getId()).toUri();
 
         return ResponseEntity.created(uri).body(response);
+    }
+
+    @PostMapping(value = "/preparaEntrega")
+    public ResponseEntity<LogisticaPedidoResponse> preparaEntrega(@RequestBody @Valid LogisticaPedidoRequest request){
+        return ResponseEntity.ok(service.preparaEntrega(request));
     }
 }

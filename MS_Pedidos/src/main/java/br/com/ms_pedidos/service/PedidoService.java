@@ -2,30 +2,36 @@ package br.com.ms_pedidos.service;
 
 import br.com.ms_pedidos.enums.StatusPedidoEnum;
 import br.com.ms_pedidos.exception.PedidoException;
+import br.com.ms_pedidos.gateway.LogisticaGateway;
+import br.com.ms_pedidos.gateway.RemoverEstoqueGateway;
 import br.com.ms_pedidos.model.Endereco;
 import br.com.ms_pedidos.model.Item;
 import br.com.ms_pedidos.model.Pedido;
-import br.com.ms_pedidos.model.records.PedidoRequest;
-import br.com.ms_pedidos.model.records.PedidoResponse;
+import br.com.ms_pedidos.model.records.*;
 import br.com.ms_pedidos.repository.IEnderecoRepository;
 import br.com.ms_pedidos.repository.IItemRepository;
 import br.com.ms_pedidos.repository.IPedidoRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class PedidoService {
 
     @Autowired
+    private RemoverEstoqueGateway gateway;
+    @Autowired
     private IPedidoRepository repository;
     @Autowired
     private IItemRepository itemRepository;
     @Autowired
     private IEnderecoRepository enderecoRepository;
+    @Autowired
+    private LogisticaGateway logisticaGateway;
     private StatusPedidoEnum status;
 
     public PedidoResponse gerarPedido(PedidoRequest request) throws PedidoException {
@@ -47,18 +53,10 @@ public class PedidoService {
         Pedido p = repository.save(pedido);
 
         List<Item> itens = request.getItens().stream().map(itemRequest -> {
-            UUID produtoId = itemRequest.getIdproduto();
-//            try {
-//                //produtoRepository.findById(produtoId).orElseThrow(() -> new PedidoException("Produto não encontrado"));
-//                //produtoEstoqueService.removerEstoque(produtoId, itemRequest.getQuantidade());
-//            } catch (PedidoException e) {
-//                throw new RuntimeException(e);
-//          //  } catch (ProdutoEstoqueException e) {
-//          //      throw new RuntimeException(e);
-//            }
+            gateway.removerEstoque(new GenericMessage<>(new RemoverEstoqueRequest(itemRequest.getIdproduto(), itemRequest.getQuantidade())));
 
             Item item = new Item();
-            item.setIdproduto(produtoId);
+            item.setIdproduto(itemRequest.getIdproduto());
             item.setQuantidade(itemRequest.getQuantidade());
             item.setPedido(p);
             return item;
@@ -69,6 +67,10 @@ public class PedidoService {
         p.setItens(itens);
 
         return new PedidoResponse(pedido);
+    }
+
+    public LogisticaPedidoResponse preparaEntrega(@Valid LogisticaPedidoRequest request){
+     return logisticaGateway.logistica(new GenericMessage<>(request));
     }
 
 }

@@ -13,6 +13,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RemoverEstoqueRequest {
-    private UUID idproduto;
+    private UUID id;
     private BigDecimal quantidade;
 }

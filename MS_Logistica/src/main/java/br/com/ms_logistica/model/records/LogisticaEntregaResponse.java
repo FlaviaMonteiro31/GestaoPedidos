@@ -35,4 +35,5 @@ public class LogisticaEntregaResponse {
         setDataEntrega(le.getDataEntrega());
         setStatusEntrega(le.getStatusEntrega());
     }
+
 }
